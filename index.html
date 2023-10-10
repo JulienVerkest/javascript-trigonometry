@@ -4,26 +4,42 @@
         <title>Javascript Trigonometry</title>
         <style>
             body {
-                background-color: white;
+                background-color: black;
             }
         </style>
     </head>
     <body>
-        <canvas id="canvasTrigo" width="500px" height="500px"></canvas>
+        <canvas id="canvasTrigo" width="500px" height="500px" style="background-color: white;"></canvas>
         <script>
             const ctx = document.getElementById('canvasTrigo').getContext('2d');
-
-            const A = {x: 100, y: 100};
-            const B = {x: 200, y: 100};
-            const C = {x: 0, y: 0};
-            drawPoint(A);
-            drawPoint(B);
-            drawPoint(C);
-            drawText('A', A);
-            drawText('B', B);
-            drawText('C', C);
-
+            const offset = {
+                x: ctx.canvas.width / 2,
+                y: ctx.canvas.height / 2
+            }
+            ctx.translate(offset.x, offset.y);
             
+
+            const B = {x: -100, y: 100};
+            const C = {x: -50, y: 0};
+            const A = {x: 0, y: 0};
+
+            document.onmousemove=(e) => {
+                B.x = e.x - offset.x;
+                B.y = e.y - offset.y;
+                C.x =B.x;
+                update();
+            }
+            
+            function update() {
+                ctx.clearRect(-offset.x, -offset.y, ctx.canvas.width, ctx.canvas.height);
+                drawCoordinates();
+                drawPoint(A);
+                drawPoint(B);
+                drawPoint(C);
+                drawText('A', A);
+                drawText('B', B);
+                drawText('C', C);
+            }
 
             function drawPoint(loc, size=10, color='black') {
                 ctx.beginPath();
@@ -39,6 +55,25 @@
                 ctx.textBaseline = 'middle';
                 ctx.font = 'bold 13px Courier';
                 ctx.fillText(text, loc.x, loc.y);
+            }
+
+            function drawCoordinates() {
+                ctx.beginPath();
+                ctx.strokeStyle = 'gray';
+                ctx.setLineDash([4, 2]);
+                ctx.lineWidth = 1;
+
+                // draw x axis
+                ctx.moveTo(-offset.x, 0);
+                ctx.lineTo(offset.x, 0);
+                ctx.stroke();
+
+                // draw y axis
+                ctx.moveTo(0, -offset.y);
+                ctx.lineTo(0, offset.y);
+                ctx.stroke();
+
+                ctx.setLineDash([]);
             }
         </script>
     </body>
