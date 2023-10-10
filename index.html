@@ -31,17 +31,46 @@
             }
 
             function update() {
-                ctx.clearRect(-offset.x, -offset.y, ctx.canvas.width, ctx.canvas.height);
+                const c = distance(A, B);
+                const a = distance(B, C);
+                const b = distance(A, C);
+                
+                const sin = a/c;
+                const cos = b/c;
+                const tan = a/b;
+
+                ctx.clearRect(-offset.x, -offset.y, ctx.canvas.width, ctx.canvas.height); 
+
                 drawCoordinates();
+                
+                
                 drawLine(A, B);
+                drawText('c', average(A,B), "black"); 
                 drawLine(B, C);
+                drawText('a', average(B,C), "black");
                 drawLine(C, A);
+                drawText('b', average(A,C), "black"); 
+
+                drawText("0",A)
+
+                /*
                 drawPoint(A);
                 drawPoint(B);
                 drawPoint(C);
                 drawText('A', A);
                 drawText('B', B);
-                drawText('C', C);
+                drawText('C', C);*/
+            }
+
+            function average(p1, p2) {
+                return {
+                    x: (p1.x + p2.x) / 2,
+                    y: (p1.y + p2.y) / 2
+                }
+            }
+
+            function distance(p1, p2){
+                return Math.hypot(p1.x-p2.x, p1.y-p2.y);
             }
 
             function drawPoint(loc, size=10, color='black') {
@@ -51,12 +80,15 @@
                 ctx.fill();
             }
 
-            function drawText(text, loc, color='white') {
+            function drawText(text, loc, color='black') {
                 ctx.beginPath()
                 ctx.fillStyle = color;
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
-                ctx.font = 'bold 13px Courier';
+                ctx.font = 'bold 18px Courier';
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 7;
+                ctx.strokeText(text, loc.x, loc.y);
                 ctx.fillText(text, loc.x, loc.y);
             }
 
