@@ -10,13 +10,25 @@
     </head>
     <body>
         <canvas id="canvasTrigo" width="500px" height="500px" style="background-color: white;"></canvas>
+        <br/>
+        <br/>
+        <canvas id="canvasTrigoChart" width="500px" height="100px" style="background-color: white;"></canvas>
+        
         <script>
             const ctx = document.getElementById('canvasTrigo').getContext('2d');
+            const chartCtx = document.getElementById('canvasTrigoChart').getContext('2d');
+
             const offset = {
                 x: ctx.canvas.width / 2,
                 y: ctx.canvas.height / 2
             }
             ctx.translate(offset.x, offset.y);
+
+            const chartOffset = {
+                x: chartCtx.canvas.width / 2,
+                y: chartCtx.canvas.height / 2
+            }
+            chartCtx.translate(chartOffset.x, chartOffset.y);
             
 
             const B = {x: -100, y: 100};
@@ -37,24 +49,47 @@
                 
                 const sin = a/c;
                 const theta = Math.asin(sin); // inverse  θ = sin-1 (a/c) radian (1,57 => 90°)
-                const cos = b/c;
-                const tan = a/b;
+                const cos = b/c; 
+                const tan = a/b; // tan = sin/cos
 
                 ctx.clearRect(-offset.x, -offset.y, ctx.canvas.width, ctx.canvas.height); 
+                //chartCtx.clearRect(-chartOffset.x, -chartOffset.y, chartCtx.canvas.width, chartCtx.canvas.height); 
 
-                drawCoordinates();
+                drawCoordinates(ctx, offset);
+                drawCoordinates(chartCtx, chartOffset)
                 
-                drawText("sin = a/c = " + sin.toFixed(2), {x: 0, y: -offset.y + 20}, "black");
-                drawText("θ = " + theta.toFixed(2) + "("+Math.round(toDeg(theta)).toString.padStart(2, " ")+"°)", {x: 0, y: -offset.y + 40}, "black");
+                drawText("sin = a/c = " + sin.toFixed(2), {x: 0, y: -offset.y + 20}, "red");
+                drawText("cos = b/c = " + cos.toFixed(2), {x: 0, y: -offset.y + 40}, "blue");
+                drawText("tan = a/b = " + tan.toFixed(2), {x: 0, y: -offset.y + 60}, "magenta");
+
+                drawText("θ = " + theta.toFixed(2) + "("+Math.round(toDeg(theta)).toString().padStart(2, " ")+"°)", {x: 0, y: offset.y  - 20}, "black");
                 
                 drawLine(A, B);
-                drawText('c', average(A,B), "black"); 
-                drawLine(B, C);
-                drawText('a', average(B,C), "black");
-                drawLine(C, A);
-                drawText('b', average(A,C), "black"); 
+                drawText('c', average(A,B)); 
+                drawLine(B, C,"red");
+                drawText('a', average(B,C), "red");
+                drawLine(A, C, "blue");
+                drawText('b', average(A,C), "blue"); 
 
                 drawText("0",A)
+                
+                ctx.beginPath();
+                ctx.strokeStyle = 'black';
+                ctx.lineWidth = 2;
+                const startAngle = B.x>A.x?0:Math.PI;
+                let endAngle = B.y<C.y?-theta:theta;
+                if (B.x<A.x){
+                    endAngle = Math.PI - endAngle;
+                }
+                const clockwise = B.y<C.y^B.x>A.x;
+                ctx.arc(0, 0, 20, startAngle, endAngle, !clockwise); // ctx.arc(x, y, radius, startAngle, endAngle [, anticlockwise]);
+                ctx.stroke();
+
+                const chartScaler = chartOffset.y;
+                drawPoint({
+                    x:theta*chartScaler, 
+                    y:sin*chartScaler}, 
+                2, "red");
 
                 /*
                 drawPoint(A);
@@ -81,11 +116,11 @@
                 return Math.hypot(p1.x-p2.x, p1.y-p2.y);
             }
 
-            function drawPoint(loc, size=10, color='black') {
-                ctx.beginPath();
-                ctx.fillStyle = color;
-                ctx.arc(loc.x, loc.y, size, 0, 2 * Math.PI);
-                ctx.fill();
+            function drawPoint(loc, size=2, color='black') {
+                chartCtx.beginPath();
+                chartCtx.fillStyle = color;
+                chartCtx.arc(loc.x, loc.y, size, 0, 2 * Math.PI);
+                chartCtx.fill();
             }
 
             function drawText(text, loc, color='black') {
@@ -109,7 +144,7 @@
                 ctx.stroke();
             }
             
-            function drawCoordinates() {
+            function drawCoordinates(ctx, offset) {
                 ctx.beginPath();
                 ctx.strokeStyle = 'gray';
                 ctx.setLineDash([4, 2]);
