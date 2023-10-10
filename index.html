@@ -29,10 +29,13 @@
                 C.x =B.x;
                 update();
             }
-            
+
             function update() {
                 ctx.clearRect(-offset.x, -offset.y, ctx.canvas.width, ctx.canvas.height);
                 drawCoordinates();
+                drawLine(A, B);
+                drawLine(B, C);
+                drawLine(C, A);
                 drawPoint(A);
                 drawPoint(B);
                 drawPoint(C);
@@ -57,6 +60,15 @@
                 ctx.fillText(text, loc.x, loc.y);
             }
 
+            function drawLine(p1, p2, color='black') {
+                ctx.beginPath();
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2;
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
+            }
+            
             function drawCoordinates() {
                 ctx.beginPath();
                 ctx.strokeStyle = 'gray';
