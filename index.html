@@ -1,1 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Javascript Trigonometry</title>
+        <style>
+            body {
+                background-color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="canvasTrigo" width="500px" height="500px"></canvas>
+        <script>
+            const ctx = document.getElementById('canvasTrigo').getContext('2d');
 
+            const A = {x: 100, y: 100};
+            const B = {x: 200, y: 100};
+            const C = {x: 0, y: 0};
+            drawPoint(A);
+            drawPoint(B);
+            drawPoint(C);
+            drawText('A', A);
+            drawText('B', B);
+            drawText('C', C);
+
+            
+
+            function drawPoint(loc, size=10, color='black') {
+                ctx.beginPath();
+                ctx.fillStyle = color;
+                ctx.arc(loc.x, loc.y, size, 0, 2 * Math.PI);
+                ctx.fill();
+            }
+
+            function drawText(text, loc, color='white') {
+                ctx.beginPath()
+                ctx.fillStyle = color;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.font = 'bold 13px Courier';
+                ctx.fillText(text, loc.x, loc.y);
+            }
+        </script>
+    </body>
+</html>
