@@ -16,6 +16,10 @@ c = 2² + 4² = 4 + 16 = √20
 **t**an = côté **o**pposé / coté **a**djacent  
 👀 Moyen mnémotechnique **SOHCAHTOA** 
 
+π / 2 radian = 90°  
+
+
+
 
 ## Canvas
 
